@@ -1,5 +1,5 @@
-var app = angular.module('itunes');
-
+var app = angular.module('itunes'); 
+ 
 app.service('itunesService', function($http, $q){
   //This service is what will do the 'heavy lifting' and get our data from the iTunes API.
   //Also note that we're using a 'service' and not a 'factory' so all your methods you want to call in your controller need to be on 'this'.
@@ -10,5 +10,36 @@ app.service('itunesService', function($http, $q){
   //You can return the http request or you can make your own promise in order to manipulate the data before you resolve it.
 
     //Code here
+
+    this.getArtist = function(artist) {
+    	var deferred = $q.defer();
+
+    	$http({
+    		method: 'JSONP',
+    		url: 'https://itunes.apple.com/search?term=' + artist + '&callback=JSON_CALLBACK'
+    	})
+    	.then(function(result){
+        var songData = result.data.results;
+        var songFilter = function(songData) {
+          var songArray = [];
+          for (var i = 0; i < songData.length; i++){ 
+            var obj = {};
+            obj.AlbumArt = songData[i].artworkUrl30;
+            obj.Artist = songData[i].artistName;
+            obj.Collection = songData[i].collectionName;
+            obj.CollectionPrice = songData[i].collectionPrice;
+            obj.Play = songData[i].previewUrl;
+            obj.Type = songData[i].kind;
+            songArray.push(obj);
+          };
+          return songArray;
+         }
+         // console.log(result.data.results);
+        var artistResponse = songFilter(result.data.results);
+        console.log(artistResponse);
+    		deferred.resolve(artistResponse);
+    	})
+    	return deferred.promise;
+    }
     
 });
