@@ -1,12 +1,13 @@
 var app = angular.module('itunes'); 
 
-app.controller('mainCtrl', function($scope, itunesService){
+app.controller('mainCtrl', function($scope, itunesService){ 
   //This is setting up the default behavior of our ng-grid. The important thing to note is
   //the 'data' property. The value is 'songData'. That means ng-grid is looking for songData on $scope and is putting whatever songData is into the grid.
   //this means when you make your iTunes request, you'll need to get back the information, parse it accordingly, then set it to songData on the scope -> $scope.songData = ...
   $scope.gridOptions = { 
       data: 'songData',
       height: '110px',
+      filterOptions : $scope.filterOptions,
       sortInfo: {fields: ['Song', 'Artist', 'Collection', 'Type'], directions: ['asc']},
       columnDefs: [
         {field: 'Play', displayName: 'Play', width: '40px', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><a href="{{row.getProperty(col.field)}}"><img src="http://www.icty.org/x/image/Miscellaneous/play_icon30x30.png"></a></div>'},
@@ -32,13 +33,18 @@ app.controller('mainCtrl', function($scope, itunesService){
     
     //Code here
 
-      $scope.getSongData = function(artist) {
-      itunesService.getArtist(artist).then(function(artistData) {
+      $scope.getSongData = function() {
+      itunesService.getArtist($scope.artist, $scope.selectOption).then(function(artistData) {
         // artistData = songFilter(artistData);
         $scope.songData = artistData;
         // console.log($scope.songData);
       });
-    } 
+    };
+  });
+    
+
+  
+    
 
 
   //Check that the above method is working by entering a name into the input field on your web app, and then console.log the result
@@ -79,8 +85,56 @@ app.controller('mainCtrl', function($scope, itunesService){
   //Once you have that final data array, you simply need to put it on the scope (or more specifically on the scope as songData). Once you do this ($scope.songData = myFinalArray) then ng-grid will see that and populate the page.
 
     //Code here
-});
 
 
 
+
+
+
+ // $scope.getSongData = function(artist) {
+ //      itunesService.getArtist(artist).then(function(artistData) {
+ //        // artistData = songFilter(artistData);
+ //        $scope.songData = artistData;
+ //        // console.log($scope.songData);
+ //      });
+ //    } 
+
+ //    $scope.getSongDataFiltered = function(selection) {
+ //      // $scope.selection = selection;
+ //      $scope.songs = [];
+ //      //console.log($scope.songs);
+ //      for (var i = 0; i < $scope.songData.length; i ++) {
+ //        if ($scope.songData[i].Type === selection) {
+ //          $scope.songs.push($scope.songs[i]);
+ //         // console.log($scope.songs);
+ //        }
+ //      }
+ //      $scope.songData = $scope.songs;
+ //      return $scope.songData;
+ //    }
+
+
+
+
+
+
+ // $scope.getSongData = function(artist, selectOption) {
+ //      itunesService.getArtist(artist).then(function(artistData, selectOption) {
+ //        // artistData = songFilter(artistData);
+ //        $scope.songData = artistData;
+ //        console.log($scope.songData);
+     
+
+ //        //$scope.getSongDataFiltered = function(selection) {
+ //          // $scope.selection = selection;
+ //          $scope.songs = [];
+ //          //console.log($scope.songs);
+ //          for (var i = 0; i < $scope.songData.length; i++) {
+ //            if ($scope.songData[i].Type === selectOption) {
+ //              $scope.songs.push($scope.songData[i]);
+ //              console.log($scope.songs);
+ //            }
+ //          }
+ //          $scope.songData = $scope.songs;
+ //          return $scope.songData;
 

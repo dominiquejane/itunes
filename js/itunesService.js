@@ -11,20 +11,20 @@ app.service('itunesService', function($http, $q){
 
     //Code here
 
-    this.getArtist = function(artist) {
+    this.getArtist = function(artist, type) {
     	var deferred = $q.defer();
-
-    	$http({
-    		method: 'JSONP',
-    		url: 'https://itunes.apple.com/search?term=' + artist + '&callback=JSON_CALLBACK'
-    	})
-    	.then(function(result){
+      if(type == 'all' || type === undefined) {
+        $http({
+        method: 'JSONP',
+        url: 'https://itunes.apple.com/search?term=' + artist + '&callback=JSON_CALLBACK'
+      })
+        .then(function(result){
         var songData = result.data.results;
         var songFilter = function(songData) {
           var songArray = [];
           for (var i = 0; i < songData.length; i++){ 
             var obj = {};
-            obj.AlbumArt = songData[i].artworkUrl30;
+            obj.AlbumArt = songData[i].artworkUrl100;
             obj.Artist = songData[i].artistName;
             obj.Collection = songData[i].collectionName;
             obj.CollectionPrice = songData[i].collectionPrice;
@@ -36,10 +36,41 @@ app.service('itunesService', function($http, $q){
          }
          // console.log(result.data.results);
         var artistResponse = songFilter(result.data.results);
-        console.log(artistResponse);
+        //console.log(artistResponse);
+        deferred.resolve(artistResponse);
+      })
+      return deferred.promise;
+    }
+      
+      else{
+    	$http({
+    		method: 'JSONP',
+    		url: 'https://itunes.apple.com/search?term=' + artist + '&callback=JSON_CALLBACK&entity=' + type,
+    	})
+    	.then(function(result){
+        var songData = result.data.results;
+        var songFilter = function(songData) {
+          var songArray = [];
+          for (var i = 0; i < songData.length; i++){ 
+            var obj = {};
+            obj.AlbumArt = songData[i].artworkUrl100;
+            obj.Artist = songData[i].artistName;
+            obj.Collection = songData[i].collectionName;
+            obj.CollectionPrice = songData[i].collectionPrice;
+            obj.Play = songData[i].previewUrl;
+            obj.Type = songData[i].kind;
+            songArray.push(obj);
+          };
+          return songArray;
+         }
+         // console.log(result.data.results);
+        var artistResponse = songFilter(result.data.results);
+        //console.log(artistResponse);
     		deferred.resolve(artistResponse);
     	})
     	return deferred.promise;
     }
+  }
+
     
 });

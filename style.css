@@ -1,4 +1,4 @@
-html, body {
+html, body { 
   height: 100%;
   width: 100%;
 }
@@ -36,3 +36,8 @@ html, body {
 .ngGrid.unselectable {
   margin-top: 10px;
 }
+
+/*img {
+  height: 100%;
+  width: 100%;
+}*/
