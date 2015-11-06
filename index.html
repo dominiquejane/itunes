@@ -15,7 +15,7 @@
           </div>
           <form class="navbar-form navbar-left" role="search">
             <div class="form-group">
-
+<!-- In my input and options, everytime either of them changes, getSongData() is triggered, which takes into account what is in the input and what has been selected. By default the selected option is undefined. In my itunesService.js I have to different $http calls. The first is a call for items that meet the general criteria of 'All'/undefined options, the other makes a specific call for results of a certain type/kind. The first call gets called when you first enter in input or when you select 'All' in the optoins. The second call gets called when you select an option that is not 'All' or -empty-/undefined. -->
               <input type="text" class="form-control" ng-model="artist" placeholder="Search iTunes" ng-change="getSongData()">
               <!-- <button class="btn btn-primary" ng-click="getSongData(artist)"> Submit </button> -->
 

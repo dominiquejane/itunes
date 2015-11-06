@@ -1,4 +1,4 @@
-iTunes Angular Clone
+ iTunes Angular Clone
 ========
 
 ### Learning Objectives (Students will…):
